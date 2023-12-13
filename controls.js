@@ -41,7 +41,6 @@ class Controls {
                     this.right = false;
                     break;
             }
-            console.table(this);
         };
     }
 }
