@@ -1,2 +1,3 @@
 # self-driving-car
-Course from Radu a Scandinavian Professor on YouTube.
+
+A YouTube Course from Radu; a Romanian Professor living and working in Finland.
