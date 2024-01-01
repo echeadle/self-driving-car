@@ -1,5 +1,5 @@
 const carCanvas=document.getElementById("carCanvas");
-carCanvas.width=window.innerWidth -330;
+carCanvas.width=window.innerWidth - 330;
 const networkCanvas=document.getElementById("networkCanvas");
 networkCanvas.width=300;
 
@@ -16,7 +16,7 @@ const world = worldInfo
     : new World(new Graph());
     const viewport = new Viewport(carCanvas, world.zoom, world.offset);
 
-const N=1;
+const N=100;
 const cars=generateCars(N);
 let bestCar=cars[0];
 if(localStorage.getItem("bestBrain")){
@@ -29,11 +29,8 @@ if(localStorage.getItem("bestBrain")){
     }
 }
 
-const traffic = [];
-const roadBorders = world.buildings
-    .map((b) => b.base.segments)
-    .flat()
-    .map((s) => [s.p1, s.p2])
+const traffic=[];
+const roadBorders = world.roadBorders.map((s) => [s.p1, s.p2]);
 
 animate();
 
@@ -44,11 +41,10 @@ function save(){
 
 function discard(){
     localStorage.removeItem("bestBrain");
-
 }
 
 function generateCars(N){
-    const startPoints = world.markings.filter((m) => m instanceof Start );
+    const startPoints = world.markings.filter((m) => m instanceof Start);
     const startPoint = startPoints.length > 0
         ? startPoints[0].center
         : new Point(100, 100);
@@ -56,9 +52,10 @@ function generateCars(N){
         ? startPoints[0].directionVector
         : new Point(0, -1);
     const startAngle = - angle(dir) + Math.PI / 2;
+
     const cars=[];
-    for(let i=0;i<N;i++){
-        cars.push(new Car(startPoint.x, startPoint.y,30,50,"KEYS", startAngle));
+    for(let i=1;i<=N;i++){
+        cars.push(new Car(startPoint.x, startPoint.y,30,50,"AI",startAngle));
     }
     return cars;
 }
@@ -68,11 +65,11 @@ function animate(time){
         traffic[i].update(roadBorders,[]);
     }
     for(let i=0;i<cars.length;i++){
-        cars[i].update(roadBorders, traffic);
+        cars[i].update(roadBorders,traffic);
     }
     bestCar=cars.find(
-        c=>c.y==Math.min(
-            ...cars.map(c=>c.y)
+        c=>c.fittness==Math.max(
+            ...cars.map(c=>c.fittness)
         ));
 
     world.cars = cars;
@@ -86,7 +83,7 @@ function animate(time){
     world.draw(carCtx, viewPoint, false);
   
     for(let i=0;i<traffic.length;i++){
-        traffic[i].draw(carCtx,"red");
+        traffic[i].draw(carCtx);
     }
 
     networkCtx.lineDashOffset=-time/50;

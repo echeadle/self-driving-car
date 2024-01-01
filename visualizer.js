@@ -27,8 +27,7 @@ class Visualizer{
                     :[]
             );  
         }
-        
-    }
+            }
 
     static drawLevel(ctx,level,left,top,width,height,outputLabels){
         const right=left+width;
@@ -92,9 +91,9 @@ class Visualizer{
                 ctx.fillStyle="black";
                 ctx.strokeStyle="white";
                 ctx.font=(nodeRadius*1.5)+"px Arial";
-                ctx.fillText(outputLabels[i],x,top-nodeRadius*0.15);
+                ctx.fillText(outputLabels[i],x,top+nodeRadius*0.1);
                 ctx.lineWidth=0.5;
-                ctx.strokeText(outputLabels[i],x,top-nodeRadius*0.);
+                ctx.strokeText(outputLabels[i],x,top+nodeRadius*0.1);
             }
         }
     }
